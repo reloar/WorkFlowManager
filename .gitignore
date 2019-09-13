@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Resources
+/Setting-Up-SQLite-Resources
+/repos
+/Using-SQLite-Resources/Using SQLite - Resources
+/Setting-Up-SQLite-Resources.zip
+/Resources.zip
+/Using-SQLite-Resources.zip

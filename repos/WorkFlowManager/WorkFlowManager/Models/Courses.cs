@@ -7,6 +7,7 @@ namespace WorkFlowManager.Models
 {
     public class Courses: BaseModel
     {
+        public int CoursesId { get; set; }
        public string CourseCode { get; set; }
        public string CourseDescription { get; set; }
        public int CourseUnit { get; set; }

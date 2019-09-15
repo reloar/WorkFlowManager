@@ -19,6 +19,42 @@ namespace WorkFlowManager.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("WorkFlowManager.Models.Answer", b =>
+                {
+                    b.Property<int>("AnswerId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AnswerText");
+
+                    b.Property<int>("QuestionId");
+
+                    b.HasKey("AnswerId");
+
+                    b.HasIndex("QuestionId")
+                        .IsUnique();
+
+                    b.ToTable("Answer");
+                });
+
+            modelBuilder.Entity("WorkFlowManager.Models.Choice", b =>
+                {
+                    b.Property<int>("CHoiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ChoiceText");
+
+                    b.Property<int>("QuestionId");
+
+                    b.HasKey("CHoiceId");
+
+                    b.HasIndex("QuestionId")
+                        .IsUnique();
+
+                    b.ToTable("Choice");
+                });
+
             modelBuilder.Entity("WorkFlowManager.Models.Courses", b =>
                 {
                     b.Property<int>("Id")
@@ -31,13 +67,19 @@ namespace WorkFlowManager.Migrations
 
                     b.Property<int>("CourseUnit");
 
-                    b.Property<int?>("LecturerId");
+                    b.Property<int>("CoursesId");
 
-                    b.Property<int?>("StudentId");
+                    b.Property<int>("LecturerId");
+
+                    b.Property<int?>("QuestionsId");
+
+                    b.Property<int>("StudentId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LecturerId");
+
+                    b.HasIndex("QuestionsId");
 
                     b.HasIndex("StudentId");
 
@@ -61,6 +103,25 @@ namespace WorkFlowManager.Migrations
                     b.ToTable("Lecturers");
                 });
 
+            modelBuilder.Entity("WorkFlowManager.Models.Question", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Course");
+
+                    b.Property<int>("CourseId");
+
+                    b.Property<int>("QuestionId");
+
+                    b.Property<string>("QuestionText");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Questions");
+                });
+
             modelBuilder.Entity("WorkFlowManager.Models.Student", b =>
                 {
                     b.Property<int>("Id")
@@ -80,30 +141,37 @@ namespace WorkFlowManager.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("WorkFlowManager.Models.Test", b =>
+            modelBuilder.Entity("WorkFlowManager.Models.Answer", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.HasOne("WorkFlowManager.Models.Question", "Question")
+                        .WithOne("Answers")
+                        .HasForeignKey("WorkFlowManager.Models.Answer", "QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    b.Property<int>("Option");
-
-                    b.Property<string>("TestQuestion");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tests");
+            modelBuilder.Entity("WorkFlowManager.Models.Choice", b =>
+                {
+                    b.HasOne("WorkFlowManager.Models.Question", "Question")
+                        .WithOne("Choices")
+                        .HasForeignKey("WorkFlowManager.Models.Choice", "QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WorkFlowManager.Models.Courses", b =>
                 {
                     b.HasOne("WorkFlowManager.Models.Lecturer")
                         .WithMany("Courses")
-                        .HasForeignKey("LecturerId");
+                        .HasForeignKey("LecturerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WorkFlowManager.Models.Question", "Questions")
+                        .WithMany()
+                        .HasForeignKey("QuestionsId");
 
                     b.HasOne("WorkFlowManager.Models.Student")
                         .WithMany("Courses")
-                        .HasForeignKey("StudentId");
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WorkFlowManager.Models.Student", b =>
